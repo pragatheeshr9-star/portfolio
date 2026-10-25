@@ -84,6 +84,7 @@ services:
     plan: free
     dockerfilePath: ./smallwins/Dockerfile
     dockerContext: ./smallwins
+    dockerCommand: uvicorn app.main:app --host 0.0.0.0 --port 8000
     healthCheckPath: /health
     envVars:
       - key: PORT
