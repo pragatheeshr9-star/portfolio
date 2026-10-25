@@ -11,6 +11,18 @@ npm run dev
 
 Open `http://localhost:3000`. Create a production build with `npm run build`.
 
+## Deploy the full stack for free
+
+The repository includes a Render Blueprint at [render.yaml](render.yaml). In Render, choose
+**New > Blueprint**, connect this GitHub repository, and approve the five free web services.
+The Blueprint deploys the Next.js site and all four Python APIs, and connects them
+automatically. Render shows the site's URL in the dashboard after deployment.
+
+Free Render services can sleep after 15 minutes without traffic, so the first request after
+idle time may take about a minute. Their filesystems are temporary: TokenSense's local
+SQLite ledger resets on restart, redeploy, or sleep. Free hosting is suitable for a demo,
+not production or durable data.
+
 ## Start the full stack
 
 With Docker Desktop running, start the website and all four APIs together:

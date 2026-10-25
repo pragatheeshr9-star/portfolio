@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "render:build": "npm run build && node scripts/prepare-render-standalone.mjs",
+    "render:start": "node .next/standalone/server.js",
     "lint": "eslint"
   },
   "dependencies": {

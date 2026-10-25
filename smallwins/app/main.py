@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 from pathlib import Path
 from typing import Any
 
@@ -18,9 +19,14 @@ app = FastAPI(
     version="0.1.0",
     description="Run a small, reproducible model benchmark against a fixed set of questions.",
 )
+portfolio_host = os.environ.get("PORTFOLIO_HOST", "").strip().removeprefix("https://").removeprefix("http://").rstrip("/")
+allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+if portfolio_host:
+    allowed_origins.append(f"https://{portfolio_host}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )

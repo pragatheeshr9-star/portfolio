@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 from fastapi import FastAPI
@@ -11,9 +12,14 @@ app = FastAPI(
     version="0.1.0",
     description="A constrained tool-plan runner with structured execution traces.",
 )
+portfolio_host = os.environ.get("PORTFOLIO_HOST", "").strip().removeprefix("https://").removeprefix("http://").rstrip("/")
+allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+if portfolio_host:
+    allowed_origins.append(f"https://{portfolio_host}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )

@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 type Citation = { heading: string; excerpt: string; url: string; score: number };
 type Response = { answer: string; abstained: boolean; reason?: string; citations: Citation[]; telemetry: { latency_ms: number; cost_usd: number; embedding_provider: string } };
 
-const API = 'http://localhost:8000';
+const API = process.env.NEXT_PUBLIC_GROUNDTRUTH_API_URL
+  ? `https://${process.env.NEXT_PUBLIC_GROUNDTRUTH_API_URL.replace(/^https?:\/\//, '').replace(/\/$/, '')}`
+  : 'http://localhost:8000';
 
 export function GroundTruthWorkbench() {
   const [query, setQuery] = useState('What does len return?');

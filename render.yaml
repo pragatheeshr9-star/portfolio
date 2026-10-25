@@ -1,0 +1,95 @@
+services:
+  - type: web
+    name: pragatheesh-portfolio
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run render:build
+    startCommand: npm run render:start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: 22
+      - key: NEXT_PUBLIC_GROUNDTRUTH_API_URL
+        fromService:
+          type: web
+          name: pragatheesh-groundtruth
+          property: host
+      - key: NEXT_PUBLIC_STEADYAGENT_API_URL
+        fromService:
+          type: web
+          name: pragatheesh-steadyagent
+          property: host
+      - key: NEXT_PUBLIC_TOKENSENSE_API_URL
+        fromService:
+          type: web
+          name: pragatheesh-tokensense
+          property: host
+      - key: NEXT_PUBLIC_SMALLWINS_API_URL
+        fromService:
+          type: web
+          name: pragatheesh-smallwins
+          property: host
+
+  - type: web
+    name: pragatheesh-groundtruth
+    runtime: docker
+    plan: free
+    dockerfilePath: ./groundtruth/Dockerfile
+    dockerContext: ./groundtruth
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PORTFOLIO_HOST
+        fromService:
+          type: web
+          name: pragatheesh-portfolio
+          property: host
+
+  - type: web
+    name: pragatheesh-steadyagent
+    runtime: docker
+    plan: free
+    dockerfilePath: ./steadyagent/Dockerfile
+    dockerContext: ./steadyagent
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PORTFOLIO_HOST
+        fromService:
+          type: web
+          name: pragatheesh-portfolio
+          property: host
+
+  - type: web
+    name: pragatheesh-tokensense
+    runtime: docker
+    plan: free
+    dockerfilePath: ./tokensense/Dockerfile
+    dockerContext: ./tokensense
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PORTFOLIO_HOST
+        fromService:
+          type: web
+          name: pragatheesh-portfolio
+          property: host
+
+  - type: web
+    name: pragatheesh-smallwins
+    runtime: docker
+    plan: free
+    dockerfilePath: ./smallwins/Dockerfile
+    dockerContext: ./smallwins
+    healthCheckPath: /health
+    envVars:
+      - key: PORT
+        value: 8000
+      - key: PORTFOLIO_HOST
+        fromService:
+          type: web
+          name: pragatheesh-portfolio
+          property: host

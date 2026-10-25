@@ -1,3 +1,4 @@
+import os
 from typing import Any
 
 from fastapi import FastAPI, Header, HTTPException, Response
@@ -17,9 +18,14 @@ def create_app(settings: Settings | None = None, provider_transport: Any = None)
         version="0.1.0",
         description="A budget-aware OpenAI-compatible model gateway.",
     )
+    portfolio_host = os.environ.get("PORTFOLIO_HOST", "").strip().removeprefix("https://").removeprefix("http://").rstrip("/")
+    allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+    if portfolio_host:
+        allowed_origins.append(f"https://{portfolio_host}")
+
     application.add_middleware(
         CORSMiddleware,
-        allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+        allow_origins=allowed_origins,
         allow_methods=["GET", "POST"],
         allow_headers=["Authorization", "Content-Type"],
         expose_headers=["X-TokenSense-Cache", "X-TokenSense-Route"],

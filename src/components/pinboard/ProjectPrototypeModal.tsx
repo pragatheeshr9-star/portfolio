@@ -10,6 +10,7 @@ type ProjectInfo = {
   subtitle: string;
   description: string;
   port: number;
+  apiUrl: string;
   runCommand: string;
 };
 
@@ -53,6 +54,7 @@ const PROJECTS: Record<ProjectPrototypeId, ProjectInfo> = {
     subtitle: 'Find an answer in technical docs',
     description: 'Ask a question. The service returns supporting citations or tells you when the indexed documentation is not enough.',
     port: 8000,
+    apiUrl: process.env.NEXT_PUBLIC_GROUNDTRUTH_API_URL || 'http://localhost:8000',
     runCommand: 'cd groundtruth; uv run uvicorn app.main:app --port 8000',
   },
   steadyagent: {
@@ -60,6 +62,7 @@ const PROJECTS: Record<ProjectPrototypeId, ProjectInfo> = {
     subtitle: 'Calculate a support invoice total',
     description: 'Add three line items with a restricted calculator, then inspect the execution trace.',
     port: 8001,
+    apiUrl: process.env.NEXT_PUBLIC_STEADYAGENT_API_URL || 'http://localhost:8001',
     runCommand: 'cd steadyagent; uv run uvicorn app.main:app --port 8001',
   },
   tokensense: {
@@ -67,6 +70,7 @@ const PROJECTS: Record<ProjectPrototypeId, ProjectInfo> = {
     subtitle: 'Route a customer support prompt',
     description: 'Send a sample support request through the gateway and inspect its route, cache result, and token count.',
     port: 8002,
+    apiUrl: process.env.NEXT_PUBLIC_TOKENSENSE_API_URL || 'http://localhost:8002',
     runCommand: 'cd tokensense; uv run uvicorn app.main:app --port 8002',
   },
   smallwins: {
@@ -74,11 +78,15 @@ const PROJECTS: Record<ProjectPrototypeId, ProjectInfo> = {
     subtitle: 'Check a small answer-quality benchmark',
     description: 'Run three fixed documentation questions against the local baseline and review each answer.',
     port: 8003,
+    apiUrl: process.env.NEXT_PUBLIC_SMALLWINS_API_URL || 'http://localhost:8003',
     runCommand: 'cd smallwins; uv run uvicorn app.main:app --port 8003',
   },
 };
 
-const API_ROOT = (projectId: ProjectPrototypeId) => `http://localhost:${PROJECTS[projectId].port}`;
+const API_ROOT = (projectId: ProjectPrototypeId) => {
+  const apiUrl = PROJECTS[projectId].apiUrl;
+  return apiUrl.startsWith('http') ? apiUrl : `https://${apiUrl}`;
+};
 
 async function postJson<T>(url: string, body: unknown): Promise<{ data: T; headers: Headers }> {
   const response = await fetch(url, {

@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
@@ -5,9 +7,14 @@ from pydantic import BaseModel, Field
 from .core import answer, load_index
 
 app = FastAPI(title="GroundTruth", version="0.1.0", description="Evaluation-first technical documentation RAG")
+portfolio_host = os.environ.get("PORTFOLIO_HOST", "").strip().removeprefix("https://").removeprefix("http://").rstrip("/")
+allowed_origins = ["http://localhost:3000", "http://127.0.0.1:3000"]
+if portfolio_host:
+    allowed_origins.append(f"https://{portfolio_host}")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://127.0.0.1:3000"],
+    allow_origins=allowed_origins,
     allow_methods=["GET", "POST"],
     allow_headers=["Content-Type"],
 )
