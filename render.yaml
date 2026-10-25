@@ -12,25 +12,13 @@ services:
       - key: HOSTNAME
         value: 0.0.0.0
       - key: NEXT_PUBLIC_GROUNDTRUTH_API_URL
-        fromService:
-          type: web
-          name: pragatheesh-groundtruth
-          property: host
+        value: https://pragatheesh-groundtruth.onrender.com
       - key: NEXT_PUBLIC_STEADYAGENT_API_URL
-        fromService:
-          type: web
-          name: pragatheesh-steadyagent
-          property: host
+        value: https://pragatheesh-steadyagent.onrender.com
       - key: NEXT_PUBLIC_TOKENSENSE_API_URL
-        fromService:
-          type: web
-          name: pragatheesh-tokensense
-          property: host
+        value: https://pragatheesh-tokensense.onrender.com
       - key: NEXT_PUBLIC_SMALLWINS_API_URL
-        fromService:
-          type: web
-          name: pragatheesh-smallwins
-          property: host
+        value: https://pragatheesh-smallwins.onrender.com
 
   - type: web
     name: pragatheesh-groundtruth
@@ -43,10 +31,7 @@ services:
       - key: PORT
         value: 8000
       - key: PORTFOLIO_HOST
-        fromService:
-          type: web
-          name: pragatheesh-portfolio
-          property: host
+        value: pragatheesh-portfolio.onrender.com
 
   - type: web
     name: pragatheesh-steadyagent
@@ -59,10 +44,7 @@ services:
       - key: PORT
         value: 8000
       - key: PORTFOLIO_HOST
-        fromService:
-          type: web
-          name: pragatheesh-portfolio
-          property: host
+        value: pragatheesh-portfolio.onrender.com
 
   - type: web
     name: pragatheesh-tokensense
@@ -75,10 +57,7 @@ services:
       - key: PORT
         value: 8000
       - key: PORTFOLIO_HOST
-        fromService:
-          type: web
-          name: pragatheesh-portfolio
-          property: host
+        value: pragatheesh-portfolio.onrender.com
 
   - type: web
     name: pragatheesh-smallwins
@@ -92,7 +71,4 @@ services:
       - key: PORT
         value: 8000
       - key: PORTFOLIO_HOST
-        fromService:
-          type: web
-          name: pragatheesh-portfolio
-          property: host
+        value: pragatheesh-portfolio.onrender.com
