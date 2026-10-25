@@ -9,6 +9,8 @@ services:
     envVars:
       - key: NODE_VERSION
         value: 22
+      - key: HOSTNAME
+        value: 0.0.0.0
       - key: NEXT_PUBLIC_GROUNDTRUTH_API_URL
         fromService:
           type: web
