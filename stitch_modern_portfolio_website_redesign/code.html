@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+
+<html class="scroll-smooth" lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><meta content="web_standard" name="shell-type"/><link href="https://fonts.googleapis.com" rel="preconnect"/><link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/><link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400..800;1,400..800&amp;family=Hanken+Grotesk:ital,wght@0,300..900;1,300..900&amp;family=Caveat:wght@600;700&amp;display=swap" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}
+
+/* --- Atmospheric Atelier Day-Cycle & Glimmer --- */
+@keyframes ambientBreathe {
+  0%, 100% { transform: translate(0, 0) scale(1); opacity: 0.55; }
+  50% { transform: translate(40px, -25px) scale(1.12); opacity: 0.85; }
+}
+@keyframes paperDriftSlow {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(0.35deg); }
+}
+@keyframes paperDriftAlt {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-6px) rotate(-0.45deg); }
+}
+@keyframes dustFloat {
+  0% { transform: translateY(0px) translateX(0px); opacity: 0; }
+  25% { opacity: 0.45; }
+  50% { transform: translateY(-45px) translateX(18px); opacity: 0.7; }
+  75% { opacity: 0.35; }
+  100% { transform: translateY(-90px) translateX(35px); opacity: 0; }
+}
+
+.animate-ambient-breathe { animation: ambientBreathe 16s ease-in-out infinite; }
+.animate-paper-drift { animation: paperDriftSlow 7s ease-in-out infinite; }
+.animate-paper-drift-alt { animation: paperDriftAlt 8.5s ease-in-out infinite; }
+
+/* Custom Dust & Glimmer Particles */
+.glimmer-dot {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  background: radial-gradient(circle, rgba(205,160,80,0.85) 0%, rgba(205,160,80,0) 70%);
+  animation: dustFloat var(--dur, 10s) cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  animation-delay: var(--delay, 0s);
+}
+
+/* Paper Grid & Texture */
+.paper-texture {
+  background-color: #fcf9f2;
+  background-image: 
+    linear-gradient(to right, rgba(28,24,23,0.032) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(28,24,23,0.032) 1px, transparent 1px),
+    radial-gradient(rgba(28,24,23,0.055) 1px, transparent 0);
+  background-size: 32px 32px, 32px 32px, 16px 16px;
+}
+
+/* Deckled Card Paper Effects */
+.deckled-card {
+  position: relative;
+  background: #ffffff;
+  border: 1px solid #ebe8e1;
+  box-shadow: 
+    0 1px 1px rgba(28,24,23,0.03),
+    0 4px 12px -2px rgba(45,36,28,0.05),
+    0 16px 32px -8px rgba(45,36,28,0.08);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+}
+.deckled-card:hover {
+  border-color: #cdc5c3;
+  box-shadow: 
+    0 2px 4px rgba(28,24,23,0.04),
+    0 12px 24px -4px rgba(45,36,28,0.08),
+    0 24px 44px -8px rgba(45,36,28,0.14);
+}
+
+/* Photorealistic 3D Pushpins */
+.pushpin-3d {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  pointer-events: none;
+  filter: drop-shadow(2px 5px 4px rgba(45,36,28,0.38));
+}
+.pushpin-3d::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,0.9) 0%, rgba(255,255,255,0.2) 28%, rgba(0,0,0,0.35) 90%);
+}
+.pushpin-3d::after {
+  content: '';
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 40% 35%, #ffffff 0%, rgba(255,255,255,0.4) 50%, rgba(0,0,0,0.5) 100%);
+  box-shadow: 0 0.5px 1px rgba(0,0,0,0.4);
+}
+.pin-red { background: linear-gradient(135deg, #e53935 0%, #b71c1c 85%); }
+.pin-violet { background: linear-gradient(135deg, #7c4dff 0%, #4a148c 85%); }
+.pin-brass { background: linear-gradient(135deg, #fbc02d 0%, #8d6e15 90%); }
+.pin-obsidian { background: linear-gradient(135deg, #546e7a 0%, #1a2327 90%); }
+
+/* Photorealistic Washi Tape */
+.washi-tape {
+  position: absolute;
+  background-color: rgba(246, 238, 224, 0.88);
+  backdrop-filter: blur(1.5px);
+  border-left: 2px dashed rgba(200, 185, 160, 0.6);
+  border-right: 2px dashed rgba(200, 185, 160, 0.6);
+  box-shadow: 
+    0 1px 3px rgba(45,36,28,0.08),
+    inset 0 1px 1px rgba(255,255,255,0.8),
+    inset 0 -1px 1px rgba(0,0,0,0.04);
+  background-image: 
+    repeating-linear-gradient(45deg, rgba(255,255,255,0.35) 0, rgba(255,255,255,0.35) 6px, transparent 6px, transparent 12px),
+    linear-gradient(to bottom, rgba(255,255,255,0.4), transparent);
+  pointer-events: none;
+  z-index: 25;
+}
+
+/* Metallic Paperclip */
+.metallic-clip {
+  position: absolute;
+  width: 14px;
+  height: 38px;
+  border-radius: 8px;
+  border: 2.5px solid #8e8a85;
+  box-shadow: 1px 3px 6px rgba(45,36,28,0.25), inset 0 1px 1px #fff;
+  z-index: 26;
+  pointer-events: none;
+  background: transparent;
+}
+.metallic-clip::after {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 1px;
+  width: 7px;
+  height: 22px;
+  border-radius: 4px;
+  border: 2px solid #a6a19c;
+  border-top: none;
+}
+
+/* Distressed Archival Rubber Stamp */
+.distressed-stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border: 2px dashed #ba1a1a;
+  color: #ba1a1a;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
+  font-family: ui-monospace, monospace;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  background: rgba(186, 26, 26, 0.04);
+  box-shadow: inset 0 0 0 1px rgba(186, 26, 26, 0.08);
+  mask-image: radial-gradient(circle at 50% 50%, black 88%, transparent 105%);
+}
+
+.distressed-stamp-violet {
+  border-color: #655592;
+  color: #655592;
+  background: rgba(101, 85, 146, 0.05);
+  box-shadow: inset 0 0 0 1px rgba(101, 85, 146, 0.1);
+}
+
+/* Registration marks & rulers */
+.reg-mark {
+  font-family: ui-monospace, monospace;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: #7f7572;
+  opacity: 0.65;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Hand-annotated Polaroid Font */
+.polaroid-script {
+  font-family: 'Caveat', cursive;
+}
+
+/* Interactive Magnetic Cursor */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 9999;
+  mix-blend-mode: normal;
+  display: none;
+}
+@media (pointer: fine) {
+  #custom-cursor { display: block; }
+}
+#cursor-dot {
+  position: absolute;
+  top: -4px;
+  left: -4px;
+  width: 8px;
+  height: 8px;
+  border-radius: 9999px;
+  background: #1c1c18;
+  transition: transform 0.12s ease-out, background-color 0.2s ease;
+}
+#cursor-ring {
+  position: absolute;
+  top: -18px;
+  left: -18px;
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(28, 28, 24, 0.4);
+  background: rgba(252, 249, 242, 0.15);
+  backdrop-filter: blur(0.5px);
+  transition: width 0.22s ease-out, height 0.22s ease-out, top 0.22s ease-out, left 0.22s ease-out, border-color 0.2s, background-color 0.2s, border-radius 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#cursor-badge {
+  opacity: 0;
+  font-family: ui-monospace, monospace;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: #ffffff;
+  text-transform: uppercase;
+  transition: opacity 0.15s ease;
+  white-space: nowrap;
+}
+.cursor-hover-active #cursor-ring {
+  width: 58px;
+  height: 58px;
+  top: -29px;
+  left: -29px;
+  border-color: #655592;
+  background: rgba(101, 85, 146, 0.88);
+  box-shadow: 0 4px 14px rgba(101, 85, 146, 0.35);
+}
+.cursor-hover-active #cursor-dot {
+  transform: scale(0);
+}
+.cursor-hover-active #cursor-badge {
+  opacity: 1;
+}
+.cursor-click-spark {
+  position: fixed;
+  pointer-events: none;
+  border-radius: 9999px;
+  border: 2px solid #655592;
+  transform: translate(-50%, -50%);
+  animation: sparkRipple 0.5s ease-out forwards;
+  z-index: 9998;
+}
+@keyframes sparkRipple {
+  0% { width: 4px; height: 4px; opacity: 0.9; }
+  100% { width: 52px; height: 52px; opacity: 0; border-width: 1px; }
+}
+</style><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+          "secondary": "#655592",
+          "on-surface": "#1c1c18",
+          "on-secondary-fixed": "#200e4a",
+          "on-primary-fixed": "#1f1b1a",
+          "on-secondary": "#ffffff",
+          "secondary-container": "#ccb9fe",
+          "on-secondary-fixed-variant": "#4d3d78",
+          "on-primary-fixed-variant": "#4b4644",
+          "surface-tint": "#635d5c",
+          "inverse-surface": "#31312c",
+          "on-error-container": "#93000a",
+          "surface-container-high": "#ebe8e1",
+          "surface-container-low": "#f6f3ec",
+          "error": "#ba1a1a",
+          "surface-variant": "#e5e2db",
+          "outline-variant": "#d1c4c1",
+          "surface-container-highest": "#e5e2db",
+          "error-container": "#ffdad6",
+          "primary-container": "#1f1b1a",
+          "surface": "#fcf9f2",
+          "inverse-on-surface": "#f3f0e9",
+          "surface-container": "#f0eee7",
+          "outline": "#7f7572",
+          "on-background": "#1c1c18",
+          "on-primary": "#ffffff",
+          "primary": "#000000",
+          "on-error": "#ffffff",
+          "surface-dim": "#dcdad3",
+          "surface-bright": "#fcf9f2",
+          "tertiary-fixed-dim": "#f1be65",
+          "primary-fixed": "#eae0de",
+          "on-secondary-container": "#574783",
+          "tertiary-container": "#271900",
+          "surface-container-lowest": "#ffffff",
+          "on-tertiary-fixed-variant": "#5f4100",
+          "tertiary": "#000000",
+          "on-tertiary": "#ffffff",
+          "tertiary-fixed": "#ffdeaa",
+          "primary-fixed-dim": "#cdc5c3",
+          "background": "#fcf9f2",
+          "on-surface-variant": "#4e4543",
+          "on-tertiary-fixed": "#271900",
+          "secondary-fixed": "#e8ddff",
+          "inverse-primary": "#cdc5c3",
+          "on-tertiary-container": "#a87c2a",
+          "on-primary-container": "#898281",
+          "secondary-fixed-dim": "#cfbdff"
+        },
+        "borderRadius": {
+          "DEFAULT": "0.125rem",
+          "lg": "0.25rem",
+          "xl": "0.5rem",
+          "full": "0.75rem"
+        },
+        "spacing": {
+          "margin": "4rem",
+          "space-lg": "2rem",
+          "space-xl": "3.5rem",
+          "space-md": "1.25rem",
+          "gutter": "2rem",
+          "space-xs": "0.375rem",
+          "margin-sm": "1.5rem",
+          "space-sm": "0.75rem",
+          "gutter-sm": "1rem"
+        },
+        "fontFamily": {
+          "headline-sm": ["Hanken Grotesk"],
+          "body-sm": ["Hanken Grotesk"],
+          "display-xl": ["EB Garamond"],
+          "body-md": ["Hanken Grotesk"],
+          "label-md": ["Hanken Grotesk"],
+          "label-sm": ["Hanken Grotesk"],
+          "display-lg-mobile": ["EB Garamond"],
+          "headline-lg-mobile": ["EB Garamond"],
+          "body-lg": ["Hanken Grotesk"],
+          "headline-lg": ["EB Garamond"],
+          "display-lg": ["EB Garamond"],
+          "headline-md": ["EB Garamond"],
+          "display-xl-mobile": ["EB Garamond"]
+        },
+        "fontSize": {
+          "headline-sm": ["22px", {"lineHeight": "30px", "letterSpacing": "-0.01em", "fontWeight": "500"}],
+          "body-sm": ["13px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "400"}],
+          "display-xl": ["72px", {"lineHeight": "80px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+          "body-md": ["15px", {"lineHeight": "24px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+          "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.08em", "fontWeight": "600"}],
+          "label-sm": ["10px", {"lineHeight": "14px", "letterSpacing": "0.12em", "fontWeight": "600"}],
+          "display-lg-mobile": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "headline-lg-mobile": ["28px", {"lineHeight": "36px", "letterSpacing": "0em", "fontWeight": "400"}],
+          "body-lg": ["18px", {"lineHeight": "28px", "letterSpacing": "0.01em", "fontWeight": "400"}],
+          "headline-lg": ["40px", {"lineHeight": "48px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "display-lg": ["56px", {"lineHeight": "64px", "letterSpacing": "-0.02em", "fontWeight": "400"}],
+          "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "400"}],
+          "display-xl-mobile": ["44px", {"lineHeight": "52px", "letterSpacing": "-0.015em", "fontWeight": "400"}]
+        }
+      }
+    }
+  }</script></head><body class="bg-background paper-texture font-body-md text-on-surface antialiased selection:bg-secondary-container selection:text-on-secondary-container min-h-screen relative overflow-x-hidden">
+<!-- Interactive Cursor Markup -->
+<div id="custom-cursor">
+<div id="cursor-ring"><span id="cursor-badge">INSPECT</span></div>
+<div id="cursor-dot"></div>
+</div>
+<!-- =============================================================== -->
+<!-- ATMOSPHERIC BACKGROUND CANVAS WITH ATELIER LIGHT & PARTICLES    -->
+<!-- =============================================================== -->
+<div aria-hidden="true" class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+<!-- Breathing atelier daylight gradient -->
+<div class="absolute -top-32 -right-32 w-[42rem] h-[42rem] rounded-full bg-secondary-fixed/30 blur-[110px] animate-ambient-breathe"></div>
+<div class="absolute top-1/3 -left-40 w-[36rem] h-[36rem] rounded-full bg-tertiary-fixed/25 blur-[120px] animate-ambient-breathe" style="animation-delay: -5s;"></div>
+<div class="absolute bottom-20 right-1/4 w-[38rem] h-[38rem] rounded-full bg-[#f1ebe0]/70 blur-[90px] animate-ambient-breathe" style="animation-delay: -9s;"></div>
+<!-- Drifting Archival Glimmer Dust Particles -->
+<div class="glimmer-dot w-2 h-2 top-[18%] left-[12%]" style="--dur: 13s; --delay: 0s;"></div>
+<div class="glimmer-dot w-3 h-3 top-[34%] right-[15%]" style="--dur: 16s; --delay: 2.5s;"></div>
+<div class="glimmer-dot w-1.5 h-1.5 top-[62%] left-[28%]" style="--dur: 11s; --delay: 4.8s;"></div>
+<div class="glimmer-dot w-2.5 h-2.5 top-[78%] right-[30%]" style="--dur: 14s; --delay: 1.2s;"></div>
+<div class="glimmer-dot w-2 h-2 top-[48%] left-[75%]" style="--dur: 18s; --delay: 6s;"></div>
+<div class="glimmer-dot w-1.5 h-1.5 top-[88%] left-[8%]" style="--dur: 12s; --delay: 3.1s;"></div>
+<!-- Editorial Registration Watermarks & Edge Millimeter Rulers -->
+<div class="absolute top-24 left-3 reg-mark flex flex-col gap-1 items-center">
+<span>000</span><span class="h-6 w-[1px] bg-outline-variant/60"></span>
+<span>050</span><span class="h-6 w-[1px] bg-outline-variant/60"></span>
+<span>100</span><span class="h-6 w-[1px] bg-outline-variant/60"></span>
+<span>150</span><span class="h-6 w-[1px] bg-outline-variant/60"></span>
+<span class="writing-vertical -rotate-90 origin-center text-[8px] mt-2">CALIBRATED RULER // MM</span>
+</div>
+<div class="absolute top-28 right-4 reg-mark flex flex-col items-end gap-1">
+<span>⌖ 37.7749° N</span>
+<span>⊕ 122.4194° W</span>
+<span>⊞ SPEC: RFC-2025.4</span>
+</div>
+</div>
+<!-- =============================================================== -->
+<!-- FIXED HEADER                                                    -->
+<!-- =============================================================== -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-surface/92 backdrop-blur-md border-b border-surface-container-high shadow-[0_4px_20px_rgba(45,36,28,0.04)]">
+<div class="h-20 w-full px-margin-sm lg:px-margin flex items-center justify-between gap-gutter">
+<div class="flex items-center gap-space-md">
+<a class="px-space-sm py-space-xs bg-surface-container-low border border-surface-container-high rounded-lg shadow-sm flex items-center gap-space-xs transition-transform hover:-translate-y-0.5" data-cursor="ABOUT" href="#about">
+<span class="pushpin-3d pin-violet !static !w-4 !h-4 !shadow-none"></span>
+<span class="font-label-md text-label-md uppercase text-on-surface tracking-wider font-semibold">Alex Chen // Staff Data &amp; AI Systems Engineer</span>
+</a>
+<div class="hidden 2xl:flex items-center px-space-sm py-space-xs bg-surface-container-high rounded shadow-[0_1px_2px_rgba(45,36,28,0.04)] rotate-[-0.5deg]">
+<span class="font-label-sm text-label-sm uppercase text-on-surface-variant tracking-widest flex items-center gap-1.5">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span> ARCHIVAL PORTFOLIO — H1 2025 // STAFF ADVISORY
+        </span>
+</div>
+</div>
+<!-- 6 Pinned Sections Direct Navigation -->
+<nav class="hidden lg:flex items-center p-1 bg-surface-container-low border border-surface-container-high rounded-full shadow-[inset_0_1px_2px_rgba(28,24,23,0.04)]" id="navTabs">
+<a class="nav-tab px-3 py-1.5 font-label-md text-label-md uppercase tracking-wider transition-all rounded-full bg-primary text-on-primary shadow-sm flex items-center gap-1" data-cursor="01" href="#about"><span class="text-[10px] opacity-70">01</span><span>About</span></a>
+<a class="nav-tab px-3 py-1.5 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-all rounded-full flex items-center gap-1" data-cursor="02" href="#experience"><span class="text-[10px] opacity-70">02</span><span>Experience</span></a>
+<a class="nav-tab px-3 py-1.5 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-all rounded-full flex items-center gap-1" data-cursor="03" href="#projects"><span class="text-[10px] opacity-70">03</span><span>Projects</span></a>
+<a class="nav-tab px-3 py-1.5 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-all rounded-full flex items-center gap-1" data-cursor="04" href="#education"><span class="text-[10px] opacity-70">04</span><span>Education</span></a>
+<a class="nav-tab px-3 py-1.5 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-all rounded-full flex items-center gap-1" data-cursor="05" href="#certificates"><span class="text-[10px] opacity-70">05</span><span>Certificates</span></a>
+<a class="nav-tab px-3 py-1.5 font-label-md text-label-md uppercase tracking-wider text-on-surface-variant hover:text-on-surface transition-all rounded-full flex items-center gap-1" data-cursor="06" href="#contact"><span class="text-[10px] opacity-70">06</span><span>Contact</span></a>
+</nav>
+<div class="flex items-center gap-space-sm">
+<div class="hidden sm:flex items-center gap-space-xs">
+<a class="h-9 px-3 bg-surface-container-lowest border border-surface-container-high text-on-surface rounded shadow-sm hover:bg-surface-container transition-all font-label-md text-label-md uppercase tracking-wider flex items-center gap-1.5" data-cursor="MEMO" href="#contact">
+<span class="material-symbols-outlined text-[15px] text-secondary">mail</span> Dispatch Memo
+        </a>
+<button class="h-9 px-3 bg-primary text-on-primary rounded shadow-sm hover:bg-[#222] transition-all font-label-md text-label-md uppercase tracking-wider flex items-center gap-1.5 active:scale-95" data-cursor="COPY" onclick="copyHeaderEmail(this)" type="button">
+<span class="material-symbols-outlined text-[15px]">content_copy</span>
+<span class="btn-copy-label">Copy Email</span>
+</button>
+</div>
+<div class="w-8 h-8 rounded-full bg-secondary text-on-secondary flex items-center justify-center font-mono text-xs font-bold shadow-inner ring-2 ring-surface-container-high" title="Alex Chen Operative">AC</div>
+</div>
+</div>
+</header>
+<main class="w-full pt-20 min-h-screen relative z-10">
+<div class="relative w-full px-margin-sm lg:px-margin py-space-xl flex flex-col gap-24">
+<!-- Top Hero Banner with Filter Pills -->
+<div class="w-full flex flex-col md:flex-row md:items-end justify-between gap-space-md border-b border-surface-container pb-space-lg relative">
+<div class="flex flex-col gap-2">
+<div class="flex items-center gap-space-sm flex-wrap">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 bg-surface-container-high border border-outline-variant/60 text-on-surface-variant font-label-sm text-label-sm uppercase tracking-widest rounded shadow-sm">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span> TACTILE SYSTEMS LEDGER // REV 2025.4
+          </span>
+<span class="font-label-sm text-label-sm text-outline uppercase tracking-wider font-mono">SAN FRANCISCO ATELIER</span>
+<span class="distressed-stamp !text-[9px] !py-0.5 !px-2 border-emerald-700 text-emerald-800 bg-emerald-50">STAMPED NO. 734</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface tracking-tight leading-none">
+          Tactile Paper Pinboard &amp; Systems Architecture
+        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+          Archival tactile pinboard presenting verified distributed systems topologies, streaming architectures, and autonomous AI telemetry pipelines designed for massive scale.
+        </p>
+</div>
+<div class="flex flex-wrap items-center gap-1.5 p-1.5 bg-surface-container-low border border-surface-container-high rounded-full shadow-sm">
+<button class="board-filter-btn px-3 py-1 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-wider rounded-full shadow-sm transition-all" data-category="all" data-cursor="ALL" type="button">All Pins</button>
+<button class="board-filter-btn px-3 py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider rounded-full transition-all" data-category="about" data-cursor="01" type="button">01 About</button>
+<button class="board-filter-btn px-3 py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider rounded-full transition-all" data-category="experience" data-cursor="02" type="button">02 Experience</button>
+<button class="board-filter-btn px-3 py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider rounded-full transition-all" data-category="projects" data-cursor="03" type="button">03 Projects</button>
+<button class="board-filter-btn px-3 py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider rounded-full transition-all" data-category="education" data-cursor="04" type="button">04 Education</button>
+<button class="board-filter-btn px-3 py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider rounded-full transition-all" data-category="certificates" data-cursor="05" type="button">05 Certifications</button>
+<button class="board-filter-btn px-3 py-1 text-on-surface-variant hover:text-on-surface font-label-sm text-label-sm uppercase tracking-wider rounded-full transition-all" data-category="contact" data-cursor="06" type="button">06 Dispatch</button>
+</div>
+</div>
+<!-- =============================================================== -->
+<!-- SECTION 01: ABOUT ME & MANIFESTO (#about)                       -->
+<!-- =============================================================== -->
+<section class="portfolio-section flex flex-col gap-space-lg scroll-mt-28 relative" data-section-cat="about" id="about">
+<!-- Registration watermark -->
+<div class="absolute -top-5 right-2 reg-mark pointer-events-none">REG // 0x4F9B — DECK 01</div>
+<!-- Bookmark Index Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="px-3 py-1 bg-secondary text-on-secondary font-label-sm text-label-sm uppercase tracking-widest rounded-t shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">person</span> SECTION 01
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-surface">About Me &amp; Engineering Manifesto</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="distressed-stamp distressed-stamp-violet !text-[9px] !py-0.5">ARCHIVAL SPEC 2025.4</span>
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">INDEX: REF_ARCH_01</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-start">
+<!-- Manifesto Paper Card (7 cols) -->
+<div class="lg:col-span-7 pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="EXPAND">
+<!-- Washi Tape -->
+<div class="washi-tape -top-3 left-12 w-36 h-6 -rotate-2">
+<span class="font-mono text-[8px] text-outline tracking-widest uppercase flex items-center justify-center h-full">LEDGER ARCHIVE // NOTE</span>
+</div>
+<!-- 3D Pushpin Top Right -->
+<div class="pushpin-3d pin-violet top-2 right-4"></div>
+<div class="deckled-card p-space-lg rounded-xl rotate-[-0.6deg] flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface font-label-sm text-label-sm uppercase tracking-widest rounded font-mono">
+                PIN #01 // PHILOSOPHY NOTE
+              </span>
+<span class="font-mono text-[10px] text-outline">ATELIER DISPATCH</span>
+</div>
+<div class="flex flex-col gap-space-xs">
+<span class="font-label-sm text-label-sm uppercase text-outline tracking-widest font-mono">[ ALEX CHEN // CORE ARCHITECTURAL DIRECTIVE ]</span>
+<p class="font-headline-lg text-headline-lg text-on-surface leading-snug">
+                “I architect distributed data systems and high-throughput AI inference platforms.”
+              </p>
+<p class="font-body-md text-body-md text-on-surface-variant pt-1 leading-relaxed">
+                Staff Data &amp; AI Systems Engineer specializing in low-latency distributed runtimes, stateful streaming primitives, and GPU cluster orchestration. Dedicated to pruning architectural accidental complexity in petabyte-scale compute topologies.
+              </p>
+</div>
+<!-- Archival Pedigree Stamp Card -->
+<div class="p-space-md bg-surface-container-low border border-surface-container-high rounded-lg flex flex-col gap-2 relative overflow-hidden shadow-inner">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded-full bg-error animate-pulse"></span>
+<span class="font-label-sm text-label-sm text-on-surface uppercase tracking-wider font-semibold font-mono">
+                    VERIFIED PEDIGREE RECORD
+                  </span>
+</div>
+<span class="distressed-stamp !text-[9px] !py-0.5">EX-DATABRICKS VERIFIED</span>
+</div>
+<p class="font-mono text-body-sm text-on-surface leading-relaxed">
+                EX-DATABRICKS // 9+ YEARS ACTIVE SYSTEM DESIGN // ORCHESTRATING 2,400+ GPU CLUSTERS // SUB-SECOND FAULT-RECOVERY RUNTIMES
+              </p>
+</div>
+<!-- Core Engineering Maxims Grid -->
+<div class="p-space-md bg-[#faf7f0] border border-outline-variant/40 rounded-lg flex flex-col gap-2.5">
+<div class="flex items-center justify-between border-b border-surface-container-high pb-1.5">
+<span class="font-label-sm text-label-sm uppercase tracking-widest text-outline font-semibold">CORE ENGINEERING MAXIMS</span>
+<span class="font-mono text-label-sm text-secondary font-bold">0x4F9B // RFC-12</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-3 pt-1">
+<div class="p-2.5 bg-surface-container-lowest rounded border border-surface-container shadow-sm flex flex-col gap-1 transition-transform hover:-translate-y-0.5">
+<span class="font-mono text-[11px] text-secondary font-bold">01 // LATENCY</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Zero unnecessary serialization cycles.</span>
+<p class="text-[11px] text-on-surface-variant">Prefer zero-copy memory layouts over JSON/Protobuf bridging.</p>
+</div>
+<div class="p-2.5 bg-surface-container-lowest rounded border border-surface-container shadow-sm flex flex-col gap-1 transition-transform hover:-translate-y-0.5">
+<span class="font-mono text-[11px] text-secondary font-bold">02 // RESILIENCY</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Failure treated as a first-class state.</span>
+<p class="text-[11px] text-on-surface-variant">Stateful idempotency with automatic snapshot reconciliation.</p>
+</div>
+<div class="p-2.5 bg-surface-container-lowest rounded border border-surface-container shadow-sm flex flex-col gap-1 transition-transform hover:-translate-y-0.5">
+<span class="font-mono text-[11px] text-secondary font-bold">03 // CERTAINTY</span>
+<span class="font-body-sm text-body-sm text-on-surface font-medium">Bit-for-bit determinism over fragile abstractions.</span>
+<p class="text-[11px] text-on-surface-variant">Reproducible execution DAGs under concurrent node failures.</p>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between pt-1 border-t border-surface-container text-label-sm font-mono text-outline">
+<span>LAT: 37.7749° N, LONG: 122.4194° W</span>
+<span class="text-secondary font-semibold uppercase flex items-center gap-1">
+<span class="material-symbols-outlined text-[14px]">verified</span> VERIFIED ARCHIVAL LEDGER
+              </span>
+</div>
+</div>
+</div>
+<!-- Paper Mascot Card: Turing Bot Unit 734 (5 cols) -->
+<div class="lg:col-span-5 pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:-rotate-1 animate-paper-drift" data-cursor="ROBOT">
+<!-- Metallic Paperclip -->
+<div class="metallic-clip -top-3.5 right-10 rotate-6"></div>
+<!-- 3D Brass Pushpin -->
+<div class="pushpin-3d pin-brass -top-3 left-8"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[0.8deg] flex flex-col gap-space-sm">
+<div class="flex items-center justify-between px-1">
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-label-sm text-label-sm rounded uppercase tracking-wider font-mono">
+                UNIT 734 // AUTONOMOUS OPERATIVE
+              </span>
+<span class="inline-flex items-center gap-1 px-2 py-0.5 bg-emerald-100 text-emerald-800 rounded-full font-mono text-[10px] font-semibold">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-ping"></span> KERNEL DISPATCH
+              </span>
+</div>
+<!-- Mascot Tactile Image -->
+<div class="relative w-full aspect-square overflow-hidden rounded-lg bg-surface-container-low border border-surface-container-high flex items-center justify-center group-hover:shadow-md transition-shadow">
+<img alt="Tactile paper craft character of a friendly AI robot engineer assistant made from folded textured cream cardstock, origami paper creases, ink linework annotations, holding a tiny glowing blueprint, cute stylized mascot on transparent pure white background" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" src="https://lh3.googleusercontent.com/aida/AEtjO1Xu9vkIDRzEEZwrqFTGqeyQjeeusJq_FbqrwcZX4dvecz07DB_dzicSXsELMyAwDQ8LXVcDMUpyfhCtY23YMQFqA3W9Sk5vdwVbtir-HqmAZ1mu6A9zEaz6g-1QeW6fgd-oZwcvWpH2ZOxlJk3ABV8Jgj_fm5NXtMcQi-UgS26t1sy335ah_TF2TwV4Ahm26di3vMeo39IUwQ5eKPFTn4CjRZjbWhw48OS4USoxmDGy1JV_0u4h0_JRPOD4"/>
+<div class="absolute bottom-2 left-2 px-2.5 py-1 bg-surface-container-lowest/90 backdrop-blur border border-surface-container-high text-on-surface font-mono text-[10px] rounded shadow-sm flex items-center gap-1.5">
+<span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
+<span>TELEMETRY: AUDITING DAG REASONING</span>
+</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Turing Bot: Co-Pilot Assistant</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Handcrafted origami-mesh systems operative. Continuously audits DAG reasoning traces, monitors distributed GPU temperature thresholds, and folds distributed execution blueprints.
+              </p>
+</div>
+<!-- Telemetry Spec Chips -->
+<div class="grid grid-cols-2 gap-2 pt-1 font-mono text-label-sm">
+<div class="p-2 bg-surface-container rounded border border-surface-container-high">
+<div class="text-[9px] text-outline uppercase">EXECUTION STATE</div>
+<div class="text-on-surface font-semibold">1,024 NODES SYNCED</div>
+</div>
+<div class="p-2 bg-surface-container rounded border border-surface-container-high">
+<div class="text-[9px] text-outline uppercase">CORE TEMPERATURE</div>
+<div class="text-secondary font-semibold">21.4°C OPTIMAL</div>
+</div>
+</div>
+<div class="flex items-center justify-between px-1 pt-1 border-t border-surface-container">
+<span class="font-mono text-label-sm text-outline">ORIGAMI CARDSTOCK #04</span>
+<span class="distressed-stamp !text-[9px] !py-0.2 border-emerald-700 text-emerald-800">SPEC: VERIFIED ✓</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =============================================================== -->
+<!-- SECTION 02: PROFESSIONAL EXPERIENCE (#experience)              -->
+<!-- =============================================================== -->
+<section class="portfolio-section flex flex-col gap-space-lg scroll-mt-28 relative" data-section-cat="experience" id="experience">
+<div class="absolute -top-5 right-2 reg-mark pointer-events-none">REG // TIMELINE — 02</div>
+<!-- Bookmark Index Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="px-3 py-1 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest rounded-t shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">work_history</span> SECTION 02
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Professional Experience &amp; Career Ledgers</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">CAREER TIMELINE ARCHIVE</span>
+</div>
+<!-- Career Timeline Grid: Archival Index Cards -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter items-stretch">
+<!-- ROLE 01: Ex-Databricks -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1 flex flex-col" data-cursor="DATABRICKS">
+<!-- 3D Pushpin Top Center -->
+<div class="pushpin-3d pin-red -top-3 left-8"></div>
+<!-- Washi Tape -->
+<div class="washi-tape -top-2 right-6 w-24 h-5 -rotate-2"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[-0.7deg] flex flex-col justify-between h-full gap-space-md">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between pt-1">
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface font-mono text-[10px] rounded uppercase font-semibold">2022 — PRESENT</span>
+<span class="px-2 py-0.5 bg-emerald-100 text-emerald-800 font-mono text-[10px] rounded font-bold">STAFF LEVEL</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-[20px] text-on-surface font-semibold">Staff Data &amp; AI Systems Engineer</h3>
+<span class="font-mono text-label-sm text-secondary font-bold">Databricks // Core Runtime Division</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Spearheaded next-generation distributed execution engines and Lakehouse query optimization. Architected runtime isolation protocols for massive GPU clusters running concurrent LLM training and serving workloads.
+              </p>
+<div class="p-2.5 bg-surface-container-low rounded-lg border border-surface-container-high flex flex-col gap-1.5">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono tracking-wider font-semibold">VERIFIED ARCHITECTURAL IMPACT</span>
+<ul class="text-[12px] space-y-1 font-mono text-on-surface">
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Orchestrated 2,400+ NVIDIA H100/A100 GPU clusters with sub-second health re-balancing.</li>
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Reduced Lakehouse metadata compaction latency by 68% over 14.6 PB datasets.</li>
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Built zero-copy Arrow Flight SQL inter-node exchange layers cutting compute cost by $3.4M/yr.</li>
+</ul>
+</div>
+</div>
+<div class="pt-3 border-t border-surface-container flex items-center justify-between font-mono text-[11px]">
+<span class="text-outline">SAN FRANCISCO, CA</span>
+<span class="text-secondary font-semibold">RECORD ID: DBX-9041</span>
+</div>
+</div>
+</div>
+<!-- ROLE 02: AI Research Lab -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:-rotate-1 flex flex-col" data-cursor="HYPERSCALE">
+<!-- 3D Pushpin -->
+<div class="pushpin-3d pin-violet -top-3 left-1/2 -translate-x-1/2"></div>
+<!-- Corner tape -->
+<div class="washi-tape -top-2 left-6 w-20 h-5 rotate-3"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[0.6deg] flex flex-col justify-between h-full gap-space-md bg-surface-container-low/60">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between pt-1">
+<span class="px-2 py-0.5 bg-surface-container-highest text-on-surface font-mono text-[10px] rounded uppercase font-semibold">2020 — 2022</span>
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed font-mono text-[10px] rounded font-bold">PRINCIPAL</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-[20px] text-on-surface font-semibold">Principal Infrastructure Engineer</h3>
+<span class="font-mono text-label-sm text-secondary font-bold">Hyperscale AI Research Lab</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Led high-throughput model evaluation meshes and streaming telemetry DAGs. Designed continuous checkpointing protocols for 70B+ parameter distributed autoregressive models.
+              </p>
+<div class="p-2.5 bg-surface-container-lowest rounded-lg border border-surface-container-high flex flex-col gap-1.5">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono tracking-wider font-semibold">VERIFIED ARCHITECTURAL IMPACT</span>
+<ul class="text-[12px] space-y-1 font-mono text-on-surface">
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Scaled 10 GB/s real-time continuous ingestion pipelines with zero data loss under failover.</li>
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Engineered automated agent guardrail evaluation suite processing 8,450 tokens/sec.</li>
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Unified multi-cloud Kubernetes scheduling spanning 8 regions with NCCL optimizations.</li>
+</ul>
+</div>
+</div>
+<div class="pt-3 border-t border-surface-container flex items-center justify-between font-mono text-[11px]">
+<span class="text-outline">PALO ALTO, CA</span>
+<span class="text-secondary font-semibold">RECORD ID: HAR-5210</span>
+</div>
+</div>
+</div>
+<!-- ROLE 03: Senior Distributed Systems -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1 flex flex-col" data-cursor="STREAMING">
+<!-- 3D Pushpin -->
+<div class="pushpin-3d pin-obsidian -top-3 right-8"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[-0.5deg] flex flex-col justify-between h-full gap-space-md">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between pt-1">
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface font-mono text-[10px] rounded uppercase font-semibold">2017 — 2020</span>
+<span class="px-2 py-0.5 bg-surface-variant text-on-surface-variant font-mono text-[10px] rounded font-bold">SENIOR ENG</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-sm text-[20px] text-on-surface font-semibold">Senior Distributed Systems Engineer</h3>
+<span class="font-mono text-label-sm text-secondary font-bold">Cloudscale Streaming Platforms</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Engineered low-latency stream processing topologies with Apache Flink, Kafka, and RocksDB state backends. Authored stateful CEP primitives and dynamic backpressure dampening algorithms.
+              </p>
+<div class="p-2.5 bg-surface-container-low rounded-lg border border-surface-container-high flex flex-col gap-1.5">
+<span class="font-label-sm text-[10px] text-outline uppercase font-mono tracking-wider font-semibold">VERIFIED ARCHITECTURAL IMPACT</span>
+<ul class="text-[12px] space-y-1 font-mono text-on-surface">
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Maintained 5,000,000+ events/sec peak load with p99 latency &lt; 28ms across 400 consumer partitions.</li>
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Built Raft-based consensus metadata coordinator reducing partition split-brain errors to zero.</li>
+<li class="flex items-start gap-1.5"><span class="text-secondary font-bold">•</span> Authored internal Rust C-FFI extensions for high-frequency telemetry metrics extraction.</li>
+</ul>
+</div>
+</div>
+<div class="pt-3 border-t border-surface-container flex items-center justify-between font-mono text-[11px]">
+<span class="text-outline">SEATTLE / SF</span>
+<span class="text-secondary font-semibold">RECORD ID: CSP-1883</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =============================================================== -->
+<!-- SECTION 03: PROJECTS & TECHNICAL BLUEPRINTS (#projects)        -->
+<!-- =============================================================== -->
+<section class="portfolio-section flex flex-col gap-space-lg scroll-mt-28 relative" data-section-cat="projects" id="projects">
+<div class="absolute -top-5 right-2 reg-mark pointer-events-none">REG // SCHEMATICS — 03</div>
+<!-- Bookmark Index Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="px-3 py-1 bg-surface-container-high text-on-surface font-label-sm text-label-sm uppercase tracking-widest rounded-t shadow-sm flex items-center gap-1.5 border-t border-x border-outline-variant/60">
+<span class="material-symbols-outlined text-[14px]">architecture</span> SECTION 03
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Projects &amp; Flagship Technical Blueprints</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">3 PRODUCTION SCHEMATICS</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- BLUEPRINT 01: NEXUSSTREAM -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="INSPECT">
+<!-- 3D Pushpin -->
+<div class="pushpin-3d pin-red -top-3 left-6"></div>
+<!-- Tape Corner -->
+<div class="washi-tape -top-2 right-4 w-20 h-5 -rotate-6"></div>
+<div class="deckled-card p-space-sm pb-space-md rounded-xl rotate-[-0.5deg] flex flex-col gap-space-sm">
+<div class="relative w-full aspect-[16/10] overflow-hidden rounded bg-primary border border-surface-container-high">
+<img alt="Distributed Real-Time Stream Processing and LLM Inference Engine architecture diagram" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AEtjO1WNrFALz1vfrZvj5PC_3JxhugOnnerEBpEknQCTL9aFqMsX-tLYg7stWRVohpXFB20vS-OuPRgt5A7cVopnRSCfdeNPQQMlSKJOua4NRZjKo059Hqa7nVRxdxDB_FfFmcvLB-940_Pi-8FAiB711mcStHYE5Clr-3K1diBswss8SdMikI4Oxli2ATCix8BEyX-z14REYSt5aCoQbQgeYThb6Q4oK1XwG1vT2wR46TP9FI25DwLHwagSlf0n"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-primary/90 text-on-primary font-mono text-[10px] rounded uppercase tracking-wider backdrop-blur border border-white/20">
+                TOPOLOGY SPEC
+              </div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">BLUEPRINT // 01</span>
+<span class="font-mono text-label-sm text-secondary font-bold">p99 &lt; 38ms</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">NexusStream: Stateful LLM Serving Mesh</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Hybrid distributed event loop unifying Apache Flink stateful aggregations with dynamic vLLM tensor-parallel worker nodes. Sub-50ms token latency under 10 GB/s continuous ingress.
+              </p>
+</div>
+<div class="flex flex-wrap gap-1.5 px-1 font-mono text-[10px]">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface rounded font-medium">10 GB/s Stream</span>
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed rounded font-medium">vLLM + Flink</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded">Milvus Index</span>
+</div>
+<div class="flex items-center justify-between px-1 pt-2 border-t border-surface-container">
+<a class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary hover:text-secondary uppercase tracking-widest font-semibold" data-cursor="SPECS" href="#contact">
+                Inspect Architecture <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<span class="font-mono text-label-sm text-outline">FIG. 4A</span>
+</div>
+</div>
+</div>
+<!-- BLUEPRINT 02: AGENTFLOW -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="INSPECT">
+<!-- 3D Pushpin -->
+<div class="pushpin-3d pin-violet -top-3 left-8"></div>
+<div class="washi-tape -top-2.5 right-6 w-24 h-5 rotate-3"></div>
+<div class="deckled-card p-space-sm pb-space-md rounded-xl rotate-[0.6deg] flex flex-col gap-space-sm">
+<div class="relative w-full aspect-[16/10] overflow-hidden rounded bg-primary border border-surface-container-high">
+<img alt="AgentFlow multi-agent orchestration reasoning chains and telemetry evaluation suite" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AEtjO1Xruk577qMAF1Qwdk3d7Y00TFCXkopYwzFtxA9RhDFAQN28K-XlwYfRZUhOS1_CVPKvenncOnmRBR6XGUTh2-uNx5plrzV-CD5bNnfJtvyBcYSRYN1e4qKOxL992IaJg57n_O4cm8P4_lihrZWKaxoPB_EDrDPZMOH6_qYPojrc-eKJjsEy9G_V357kqvZLjG2tzNJVfLHLkqZAeJu8u7lnVvWUMm3hlcj-o5MPYttCL9uDc2VmX1HXpKcW"/>
+<div class="absolute bottom-2 left-2 px-2 py-0.5 bg-surface-container-lowest/90 text-on-surface font-mono text-[10px] rounded uppercase tracking-wider backdrop-blur border border-surface-container-high">
+                AGENT TELEMETRY LAB
+              </div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">BLUEPRINT // 02</span>
+<span class="font-mono text-label-sm text-secondary font-bold">8,450 tok/s</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">AgentFlow: High-Yield Chain Telemetry</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                Full-lifecycle autonomous agent evaluator tracking step-level reasoning DAGs, automated guardrail verification, and cost-per-call telemetry in real-time.
+              </p>
+</div>
+<div class="flex flex-wrap gap-1.5 px-1 font-mono text-[10px]">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface rounded font-medium">99.8% Guardrails</span>
+<span class="px-2 py-0.5 bg-tertiary-fixed text-on-tertiary-fixed rounded font-medium">$4.51/hr Compute</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded">DAG Visualizer</span>
+</div>
+<div class="flex items-center justify-between px-1 pt-2 border-t border-surface-container">
+<a class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary hover:text-secondary uppercase tracking-widest font-semibold" data-cursor="SPECS" href="#contact">
+                Inspect Reasoning Protocol <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<span class="font-mono text-label-sm text-outline">FIG. 4B</span>
+</div>
+</div>
+</div>
+<!-- BLUEPRINT 03: OMNILAKE -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="INSPECT">
+<!-- 3D Pushpin -->
+<div class="pushpin-3d pin-brass -top-3 right-8"></div>
+<div class="washi-tape -top-3 left-4 w-24 h-5 -rotate-3"></div>
+<div class="deckled-card p-space-sm pb-space-md rounded-xl rotate-[-0.8deg] flex flex-col gap-space-sm">
+<div class="relative w-full aspect-[16/10] overflow-hidden rounded bg-primary border border-surface-container-high">
+<img alt="Data Lakehouse Query Optimization at Petabyte Scale architecture topology" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AEtjO1VF06utc9optePAvS4DXDtqBHv5cuh9Q3-h8kWV5vnCTm8XK5wXJU4o3MRZdmM4_idFudBTaljZ63i6KHst0OoxZPjQEkbfJMgTUsI52dYymgv1sxoW686armOm1mflGQgsRGrah_2vt1XxDf3ekLlwGjOYJxpeXTOg3-irJNRPN91VMNNafoTaWNFJD4yaO1a8Pb9QXTEpTahgmmQmmbBR1YnKiGnGLetMNN40wT_vZ-XlE9p1t9Wnh7Pq"/>
+<div class="absolute top-2 left-2 px-2 py-0.5 bg-primary/90 text-on-primary font-mono text-[10px] rounded uppercase tracking-wider backdrop-blur border border-white/20">
+                14.6 PB PRODUCTION
+              </div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<div class="flex items-center justify-between">
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">BLUEPRINT // 03</span>
+<span class="font-mono text-label-sm text-secondary font-bold">1.18s Query Time</span>
+</div>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">OmniLake: Petabyte Parquet Topology</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                High-cardinality metadata compaction and zero-copy columnar execution over 2.1 billion files, yielding a 94.1% partition pruning rate and 74% compute reduction.
+              </p>
+</div>
+<div class="flex flex-wrap gap-1.5 px-1 font-mono text-[10px]">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface rounded font-medium">14.6 PB Lake</span>
+<span class="px-2 py-0.5 bg-secondary-fixed text-on-secondary-fixed rounded font-medium">Apache Iceberg</span>
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface-variant rounded">94.1% Pruned</span>
+</div>
+<div class="flex items-center justify-between px-1 pt-2 border-t border-surface-container">
+<a class="inline-flex items-center gap-1 font-label-sm text-label-sm text-primary hover:text-secondary uppercase tracking-widest font-semibold" data-cursor="SPECS" href="#contact">
+                Inspect Lakehouse Spec <span class="material-symbols-outlined text-[14px]">arrow_forward</span>
+</a>
+<span class="font-mono text-label-sm text-outline">FIG. 4C</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =============================================================== -->
+<!-- SECTION 04: EDUCATION & ACADEMICS (#education)                  -->
+<!-- =============================================================== -->
+<section class="portfolio-section flex flex-col gap-space-lg scroll-mt-28 relative" data-section-cat="education" id="education">
+<div class="absolute -top-5 right-2 reg-mark pointer-events-none">REG // ACADEMIA — 04</div>
+<!-- Bookmark Index Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="px-3 py-1 bg-secondary text-on-secondary font-label-sm text-label-sm uppercase tracking-widest rounded-t shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">school</span> SECTION 04
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Education &amp; Academic Research Ledgers</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">ACADEMIC ARCHIVE // 2 DEGREES</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter items-stretch">
+<!-- DIPLOMA 01: Stanford / M.S. -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="STANFORD">
+<!-- Metallic Paperclip -->
+<div class="metallic-clip -top-3.5 left-10 -rotate-3"></div>
+<!-- Distressed Rubber stamp seal -->
+<div class="absolute bottom-6 right-6 distressed-stamp text-[10px] -rotate-6 pointer-events-none">
+            CONFERRED // DISTINCTION
+          </div>
+<div class="deckled-card p-space-lg rounded-xl rotate-[-0.6deg] flex flex-col justify-between h-full gap-space-md">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface font-mono text-[10px] rounded uppercase font-semibold">
+                  GRADUATE RESEARCH // STANFORD
+                </span>
+<span class="font-mono text-label-sm text-secondary font-bold">2015 — 2017</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-md text-[24px] text-on-surface">Master of Science in Computer Science</h3>
+<span class="font-mono text-label-sm text-secondary font-semibold">Stanford University // Distributed Systems Specialization</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Graduate thesis focused on asynchronous consensus algorithms, memory-bounded distributed state stores, and pipelined GPU communication topologies under heterogeneous network latency.
+              </p>
+<div class="p-3 bg-surface-container-low rounded-lg border border-surface-container-high flex flex-col gap-1.5 font-mono text-[12px]">
+<span class="text-outline uppercase text-[10px] font-semibold">RESEARCH FOCUS &amp; PUBLICATIONS</span>
+<div class="text-on-surface space-y-1">
+<div>• Thesis: <span class="italic font-serif">Fault-Tolerant Actor Meshes in Partitioned Distributed Memory</span></div>
+<div>• Advisor: Distributed Computing &amp; Systems Architecture Lab</div>
+<div>• Coursework: Advanced Operating Systems, Distributed Hash Tables, Large-Scale Machine Learning Runtimes</div>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-surface-container flex items-center justify-between font-mono text-[11px] text-outline">
+<span class="distressed-stamp !text-[9px] !py-0.2">STANFORD CS DIPLOMA REF</span>
+<span class="text-secondary font-semibold">GPA: 3.94 / 4.0</span>
+</div>
+</div>
+</div>
+<!-- DIPLOMA 02: UC Berkeley / B.S. -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:-rotate-1" data-cursor="BERKELEY">
+<!-- Washi Tape -->
+<div class="washi-tape -top-3 right-10 w-28 h-6 rotate-2">
+<span class="font-mono text-[8px] text-outline tracking-widest uppercase flex items-center justify-center h-full">REGISTRAR RECORD</span>
+</div>
+<div class="deckled-card p-space-lg rounded-xl rotate-[0.6deg] flex flex-col justify-between h-full gap-space-md">
+<div class="flex flex-col gap-3">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container text-on-surface font-mono text-[10px] rounded uppercase font-semibold">
+                  UNDERGRADUATE // UC BERKELEY
+                </span>
+<span class="font-mono text-label-sm text-secondary font-bold">2011 — 2015</span>
+</div>
+<div class="flex flex-col gap-0.5">
+<h3 class="font-headline-md text-[24px] text-on-surface">Bachelor of Science in Computer Engineering</h3>
+<span class="font-mono text-label-sm text-secondary font-semibold">University of California, Berkeley // EECS Honors Program</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                Concentration in Computer Architecture, Parallel Computing, and Hardware-Software Co-Design. Senior capstone: Low-overhead zero-copy packet switching on FPGA accelerators.
+              </p>
+<div class="p-3 bg-surface-container-low rounded-lg border border-surface-container-high flex flex-col gap-1.5 font-mono text-[12px]">
+<span class="text-outline uppercase text-[10px] font-semibold">HONORS &amp; LAB ENGAGEMENTS</span>
+<div class="text-on-surface space-y-1">
+<div>• Magna Cum Laude // Eta Kappa Nu (IEEE EECS Honor Society)</div>
+<div>• Research Assistant: RISELab / AMPLab Distributed Analytics Group</div>
+<div>• Capstone: FPGA acceleration for streaming sliding-window joins</div>
+</div>
+</div>
+</div>
+<div class="pt-2 border-t border-surface-container flex items-center justify-between font-mono text-[11px] text-outline">
+<span>DIPLOMA REF: UCB-EECS-HON-3829</span>
+<span class="distressed-stamp !text-[9px] !py-0.2 border-emerald-700 text-emerald-800">HONORS GRADUATE ✓</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =============================================================== -->
+<!-- SECTION 05: CERTIFICATIONS & BADGES (#certificates)             -->
+<!-- =============================================================== -->
+<section class="portfolio-section flex flex-col gap-space-lg scroll-mt-28 relative" data-section-cat="certificates" id="certificates">
+<div class="absolute -top-5 right-2 reg-mark pointer-events-none">REG // ACCREDITATIONS — 05</div>
+<!-- Bookmark Index Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="px-3 py-1 bg-primary text-on-primary font-label-sm text-label-sm uppercase tracking-widest rounded-t shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">verified</span> SECTION 05
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Certifications &amp; Stamped Accreditations</h2>
+</div>
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">4 ACTIVE SPECIALIZATIONS</span>
+</div>
+<!-- Stamped Archival Badges Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- CERT 01: AWS Solutions Architect Pro -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="AWS">
+<div class="pushpin-3d pin-red -top-3 left-6"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[-0.8deg] flex flex-col justify-between h-full gap-space-sm">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-amber-100 text-amber-900 flex items-center justify-center font-bold text-xs font-mono shadow-inner border border-amber-200">AWS</span>
+<span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-mono text-[9px] font-bold">ACTIVE</span>
+</div>
+<h4 class="font-headline-sm text-[18px] text-on-surface font-semibold">AWS Certified Solutions Architect – Professional</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant">
+                Multi-region high availability, hybrid cloud DirectConnect, disaster recovery DAGs, and Petabyte S3/Glacier lifecycle policies.
+              </p>
+</div>
+<div class="p-2 bg-surface-container-low rounded border border-surface-container font-mono text-[10px] space-y-1">
+<div class="flex justify-between"><span class="text-outline">BADGE ID:</span><span class="text-on-surface font-semibold">AWS-PSA-99214</span></div>
+<div class="flex justify-between"><span class="text-outline">VALIDITY:</span><span class="text-secondary font-bold">2024 — 2027</span></div>
+</div>
+</div>
+</div>
+<!-- CERT 02: Databricks Machine Learning & Spark -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="SPARK">
+<div class="pushpin-3d pin-violet -top-3 right-6"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[0.7deg] flex flex-col justify-between h-full gap-space-sm bg-surface-container-low/50">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-orange-100 text-orange-900 flex items-center justify-center font-bold text-xs font-mono shadow-inner border border-orange-200">DBX</span>
+<span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-mono text-[9px] font-bold">ACTIVE</span>
+</div>
+<h4 class="font-headline-sm text-[18px] text-on-surface font-semibold">Databricks Certified Spark Systems Architect</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant">
+                Catalyst Optimizer internals, Adaptive Query Execution (AQE), Delta Lake ACID log protocols, and streaming stateful joins.
+              </p>
+</div>
+<div class="p-2 bg-surface-container-lowest rounded border border-surface-container font-mono text-[10px] space-y-1">
+<div class="flex justify-between"><span class="text-outline">BADGE ID:</span><span class="text-on-surface font-semibold">DBX-ARC-81203</span></div>
+<div class="flex justify-between"><span class="text-outline">VALIDITY:</span><span class="text-secondary font-bold">2023 — 2026</span></div>
+</div>
+</div>
+</div>
+<!-- CERT 03: NVIDIA CUDA & Distributed DL -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="CUDA">
+<div class="pushpin-3d pin-brass -top-3 left-6"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[-0.5deg] flex flex-col justify-between h-full gap-space-sm">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-green-100 text-green-900 flex items-center justify-center font-bold text-xs font-mono shadow-inner border border-green-200">NVDA</span>
+<span class="distressed-stamp !text-[8px] !py-0.2">CUDA OPTIMIZED</span>
+</div>
+<h4 class="font-headline-sm text-[18px] text-on-surface font-semibold">NVIDIA CUDA &amp; Distributed Deep Learning Specialist</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant">
+                CUDA 12.x kernel optimization, NCCL collective communications, Megatron-LM tensor parallelisms, and Warp-specialized FlashAttention.
+              </p>
+</div>
+<div class="p-2 bg-surface-container-low rounded border border-surface-container font-mono text-[10px] space-y-1">
+<div class="flex justify-between"><span class="text-outline">BADGE ID:</span><span class="text-on-surface font-semibold">NVA-DLS-55410</span></div>
+<div class="flex justify-between"><span class="text-outline">VALIDITY:</span><span class="text-secondary font-bold">LIFETIME // PROD</span></div>
+</div>
+</div>
+</div>
+<!-- CERT 04: CKA Kubernetes -->
+<div class="pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="K8S">
+<div class="pushpin-3d pin-red -top-3 right-8"></div>
+<div class="deckled-card p-space-md rounded-xl rotate-[0.9deg] flex flex-col justify-between h-full gap-space-sm bg-surface-container-low/50">
+<div class="flex flex-col gap-2">
+<div class="flex items-center justify-between">
+<span class="w-8 h-8 rounded-lg bg-blue-100 text-blue-900 flex items-center justify-center font-bold text-xs font-mono shadow-inner border border-blue-200">CNCF</span>
+<span class="px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded font-mono text-[9px] font-bold">ACTIVE</span>
+</div>
+<h4 class="font-headline-sm text-[18px] text-on-surface font-semibold">Certified Kubernetes Administrator (CKA)</h4>
+<p class="font-body-sm text-[12px] text-on-surface-variant">
+                Linux Foundation / Cloud Native Computing Foundation: Cluster lifecycle, etcd backup/restore, dynamic GPU device plugins, and Cilium eBPF network overlays.
+              </p>
+</div>
+<div class="p-2 bg-surface-container-lowest rounded border border-surface-container font-mono text-[10px] space-y-1">
+<div class="flex justify-between"><span class="text-outline">BADGE ID:</span><span class="text-on-surface font-semibold">CKA-2400-8841</span></div>
+<div class="flex justify-between"><span class="text-outline">VALIDITY:</span><span class="text-secondary font-bold">2024 — 2027</span></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- =============================================================== -->
+<!-- SECTION 06: CONTACT DETAILS & DIRECT DISPATCH (#contact)        -->
+<!-- =============================================================== -->
+<section class="portfolio-section flex flex-col gap-space-lg scroll-mt-28 relative" data-section-cat="contact" id="contact">
+<div class="absolute -top-5 right-2 reg-mark pointer-events-none">REG // DISPATCH — 06</div>
+<!-- Bookmark Index Header -->
+<div class="flex items-center justify-between pb-2 border-b border-outline-variant/50">
+<div class="flex items-center gap-3">
+<div class="px-3 py-1 bg-secondary text-on-secondary font-label-sm text-label-sm uppercase tracking-widest rounded-t shadow-sm flex items-center gap-1.5">
+<span class="material-symbols-outlined text-[14px]">send</span> SECTION 06
+          </div>
+<h2 class="font-headline-md text-headline-md text-on-surface">Contact Details &amp; Direct Dispatch</h2>
+</div>
+<div class="flex items-center gap-2">
+<span class="distressed-stamp distressed-stamp-violet !text-[9px] !py-0.5">H1 2025 ADVISORY</span>
+<span class="font-label-sm text-label-sm text-outline uppercase font-mono tracking-wider">OFFICIAL ADVISORY MEMO</span>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<!-- Archival Dispatch Note Card (7 cols) -->
+<div class="lg:col-span-7 pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="DISPATCH">
+<!-- Dual 3D Pushpins -->
+<div class="pushpin-3d pin-red -top-3 left-8"></div>
+<div class="pushpin-3d pin-red -top-3 right-8"></div>
+<div class="deckled-card !bg-[#faf7f0] p-space-lg rounded-xl rotate-[-0.6deg] flex flex-col gap-space-md">
+<div class="flex items-center justify-between">
+<span class="px-2 py-0.5 bg-surface-container-high text-on-surface font-mono text-[11px] uppercase tracking-wider rounded">
+                MEMO // DIRECT DISPATCH SPEC
+              </span>
+<span class="inline-flex items-center gap-1 font-mono text-label-sm text-secondary font-semibold">
+<span class="w-2 h-2 rounded-full bg-secondary animate-ping"></span> ACCEPTING H1 ADVISORY
+              </span>
+</div>
+<div class="flex flex-col gap-2">
+<span class="font-label-sm text-label-sm uppercase text-outline tracking-wider font-mono">[ COLLABORATION &amp; ADVISORY LEDGER ]</span>
+<h3 class="font-headline-lg text-headline-lg text-on-surface leading-tight">
+                Ready to architect zero-overhead systems?
+              </h3>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                Accepting select advisory engagements, executive fractional architecture roles, and principal engineering challenges for high-throughput distributed AI infrastructure and data platforms.
+              </p>
+</div>
+<!-- Interactive Direct Dispatch Actions -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-space-sm pt-1">
+<button class="h-12 px-space-md bg-primary text-on-primary hover:bg-[#222] transition-all rounded-lg font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-2 shadow-sm font-semibold active:scale-95" data-cursor="COPY" id="copyDispatchBtn" onclick="copyEmail(this)" type="button">
+<span class="material-symbols-outlined text-[18px]" id="copyIcon">content_copy</span>
+<span id="copyBtnLabel">Copy Direct Email</span>
+</button>
+<a class="h-12 px-space-md bg-surface-container text-on-surface hover:bg-surface-container-high border border-outline-variant/60 transition-all rounded-lg font-label-md text-label-md uppercase tracking-wider flex items-center justify-center gap-2 font-semibold shadow-sm hover:-translate-y-0.5" data-cursor="CALL" href="mailto:alex@chen-data.ai?subject=Intro%20Call%20Request">
+<span class="material-symbols-outlined text-[18px] text-secondary">calendar_month</span>
+                Schedule 20-Min Intro
+              </a>
+</div>
+<!-- Security & Coordinates Verification Card -->
+<div class="p-space-sm bg-surface-container-low rounded-lg border border-surface-container-high flex flex-col gap-1.5 font-mono text-[12px]">
+<div class="flex items-center justify-between">
+<span class="text-outline uppercase text-[10px]">EMAIL ADDRESS:</span>
+<span class="text-on-surface font-semibold selection:bg-secondary-container">alex@chen-data.ai</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-outline uppercase text-[10px]">PGP FINGERPRINT:</span>
+<span class="text-secondary font-bold">9B4E 21D0 9A8F 331C</span>
+</div>
+<div class="flex items-center justify-between">
+<span class="text-outline uppercase text-[10px]">DISPATCH LOCATION:</span>
+<span class="text-on-surface">SAN FRANCISCO, CA (PST / UTC-8)</span>
+</div>
+</div>
+<!-- External Archival References -->
+<div class="flex flex-wrap items-center justify-between pt-1 border-t border-surface-container font-mono text-label-sm">
+<span class="text-outline text-[11px] uppercase tracking-wider">EXTERNAL LEDGERS:</span>
+<div class="flex items-center gap-space-sm">
+<a class="text-primary hover:text-secondary uppercase font-semibold flex items-center gap-1 transition-colors" data-cursor="GITHUB" href="https://github.com" rel="noreferrer" target="_blank">
+                  GitHub <span class="material-symbols-outlined text-[12px]">arrow_outward</span>
+</a>
+<span class="text-outline">/</span>
+<a class="text-primary hover:text-secondary uppercase font-semibold flex items-center gap-1 transition-colors" data-cursor="ARXIV" href="https://arxiv.org" rel="noreferrer" target="_blank">
+                  ArXiv <span class="material-symbols-outlined text-[12px]">arrow_outward</span>
+</a>
+<span class="text-outline">/</span>
+<a class="text-primary hover:text-secondary uppercase font-semibold flex items-center gap-1 transition-colors" data-cursor="SUBSTACK" href="https://substack.com" rel="noreferrer" target="_blank">
+                  Substack <span class="material-symbols-outlined text-[12px]">arrow_outward</span>
+</a>
+<span class="text-outline">/</span>
+<a class="text-primary hover:text-secondary uppercase font-semibold flex items-center gap-1 transition-colors" data-cursor="LINKEDIN" href="https://linkedin.com" rel="noreferrer" target="_blank">
+                  LinkedIn <span class="material-symbols-outlined text-[12px]">arrow_outward</span>
+</a>
+</div>
+</div>
+</div>
+</div>
+<!-- Vintage Cluster Polaroid Physical Photo (5 cols) -->
+<div class="lg:col-span-5 pin-item relative group transition-all duration-300 hover:-translate-y-2 hover:rotate-1" data-cursor="PHOTO">
+<div class="washi-tape -top-3 left-1/2 -translate-x-1/2 w-32 h-6 rotate-1">
+<span class="font-mono text-[8px] text-outline uppercase tracking-widest flex items-center justify-center h-full">POLAROID ARCHIVE #88</span>
+</div>
+<!-- Corner Pin -->
+<div class="pushpin-3d pin-brass -top-2 left-6"></div>
+<div class="deckled-card p-space-sm pb-space-lg rounded-xl rotate-[1.5deg] flex flex-col gap-space-sm bg-[#faf8f5]">
+<div class="w-full aspect-[4/3] overflow-hidden rounded bg-inverse-surface border border-surface-container-high relative">
+<img alt="Archival photography of modern high-density NVIDIA H100 AI server racks in an datacenter, ambient blue and amber LED indicator lights" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs8QGYb4LxrYQHJWUlCehvk_zXS9riDaamUt8L4WkgCTwBa4GOmgTOfGtaFlBgqHrDG6ggMdvfJ0fAOy73fnmVlCEZg4DO9EQtj9p_hvbBRd9fwkVDx7XfwdZVuKVfrbm7H6M_PwLWItiUYD64sNke31n9mr95XXG9Fi73Qn2t6dD8ZBxYhSrZ7FHmFZerbTzEyjVg4fQrZuttxRKeZ23-TVPHlgq9MjXq6mznqskTQARXdMHT6OaXVQ"/>
+<div class="absolute top-2 right-2 px-2 py-0.5 bg-black/60 text-white font-mono text-[9px] rounded uppercase backdrop-blur">
+                RACK B-04
+              </div>
+</div>
+<div class="px-space-xs flex flex-col gap-1 pt-1">
+<div class="flex items-center justify-between">
+<span class="polaroid-script text-2xl text-on-surface leading-tight font-bold">
+                  “DGX H100 Cluster Rack B-04 / Night Run”
+                </span>
+<span class="distressed-stamp !text-[8px] !py-0 border-outline text-outline">STAMPED #88</span>
+</div>
+<div class="flex items-center justify-between text-outline font-mono text-[11px] uppercase pt-1 border-t border-surface-container">
+<span>RACK TEMPS: 21.4°C</span>
+<span class="text-secondary font-semibold">NVLINK MESH ACTIVE</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Archival Ledger Summary Helper Banner -->
+<div class="w-full py-space-md flex flex-col sm:flex-row items-center justify-between gap-space-md bg-surface-container-low px-space-md rounded-xl border border-surface-container-high shadow-sm relative overflow-hidden">
+<div class="flex items-center gap-space-sm">
+<span class="material-symbols-outlined text-secondary text-[22px]">auto_stories</span>
+<span class="font-body-sm text-body-sm text-on-surface">
+          All technical blueprints, career ledgers, and academic citations are open for peer architectural review and advisory dispatch.
+        </span>
+</div>
+<div class="flex items-center gap-space-sm font-mono text-label-sm text-outline uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+<span>SYSTEM STATUS: ALL CLUSTERS NOMINAL</span>
+</div>
+</div>
+</div>
+</main>
+<!-- =============================================================== -->
+<!-- FOOTER                                                          -->
+<!-- =============================================================== -->
+<footer class="w-full bg-surface-container-low border-t border-surface-container-high shadow-[0_-1px_12px_rgba(45,36,28,0.03)] relative z-10">
+<div class="w-full px-margin-sm lg:px-margin py-space-xl flex flex-col gap-space-lg">
+<div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md pb-space-lg border-b border-surface-container">
+<div class="flex flex-col gap-space-xs">
+<span class="font-headline-md text-headline-md text-on-surface">Alex Chen // Studio &amp; Systems Ledger</span>
+<p class="font-body-sm text-body-sm text-on-surface-variant max-w-xl">
+          Tactile digital atelier archiving production machine learning topology, high-throughput distributed state stores, and editorial notes on synthetic cognition.
+        </p>
+</div>
+<div class="flex flex-wrap items-center gap-space-sm font-mono text-label-sm text-on-surface-variant uppercase tracking-widest">
+<span class="px-space-sm py-1 bg-surface-container-high rounded border border-surface-container-highest">LOC: 37.7749° N, 122.4194° W</span>
+<span class="px-space-sm py-1 bg-surface-container-high rounded border border-surface-container-highest">STAMP: 2025.H1.REV04</span>
+<span class="px-space-sm py-1 bg-secondary-fixed text-on-secondary-fixed rounded font-semibold">PGP: 0x9B4E21D09A8F</span>
+</div>
+</div>
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-space-xs">
+<div class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">
+        © 2025 Alex Chen. Handcrafted tactile pinboard in EB Garamond &amp; Hanken Grotesk.
+      </div>
+<div class="flex flex-wrap items-center gap-space-md font-label-sm text-label-sm text-on-surface uppercase tracking-widest font-mono">
+<a class="hover:text-secondary transition-colors" data-cursor="ABOUT" href="#about">01 About</a>
+<a class="hover:text-secondary transition-colors" data-cursor="WORK" href="#experience">02 Experience</a>
+<a class="hover:text-secondary transition-colors" data-cursor="PROJ" href="#projects">03 Projects</a>
+<a class="hover:text-secondary transition-colors" data-cursor="EDU" href="#education">04 Education</a>
+<a class="hover:text-secondary transition-colors" data-cursor="CERTS" href="#certificates">05 Certifications</a>
+<a class="hover:text-secondary transition-colors" data-cursor="DISPATCH" href="#contact">06 Contact</a>
+</div>
+</div>
+</div>
+</footer>
+<!-- =============================================================== -->
+<!-- SCRIPT: FILTERING, NAVIGATION & CUSTOM PHYSICS CURSOR           -->
+<!-- =============================================================== -->
+<script>
+  // Dynamic Category Filtering & Section Highlighting
+  const filterBtns = document.querySelectorAll('.board-filter-btn');
+  const sections = document.querySelectorAll('.portfolio-section');
+
+  filterBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      filterBtns.forEach(b => {
+        b.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+        b.classList.add('text-on-surface-variant');
+      });
+      btn.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+      btn.classList.remove('text-on-surface-variant');
+
+      const target = btn.getAttribute('data-category');
+      sections.forEach(sec => {
+        const secCat = sec.getAttribute('data-section-cat');
+        if (target === 'all' || secCat === target) {
+          sec.style.display = 'flex';
+          sec.style.opacity = '1';
+        } else {
+          sec.style.display = 'none';
+        }
+      });
+    });
+  });
+
+  // Sticky Tab Active State on Scroll across all 6 sections
+  const navTabs = document.querySelectorAll('.nav-tab');
+  window.addEventListener('scroll', () => {
+    let current = '';
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 130;
+      if (window.scrollY >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navTabs.forEach(tab => {
+      const href = tab.getAttribute('href').substring(1);
+      if (href === current) {
+        tab.classList.add('bg-primary', 'text-on-primary', 'shadow-sm');
+        tab.classList.remove('text-on-surface-variant');
+      } else {
+        tab.classList.remove('bg-primary', 'text-on-primary', 'shadow-sm');
+        tab.classList.add('text-on-surface-variant');
+      }
+    });
+  });
+
+  // Animated Email Copy Helper
+  function copyEmail(button) {
+    const email = "alex@chen-data.ai";
+    navigator.clipboard.writeText(email).then(() => {
+      const label = document.getElementById('copyBtnLabel');
+      const icon = document.getElementById('copyIcon');
+      if (label) label.textContent = "Email Copied! ✓";
+      if (icon) icon.textContent = "check_circle";
+      button.classList.add('bg-emerald-700');
+
+      setTimeout(() => {
+        if (label) label.textContent = "Copy Direct Email";
+        if (icon) icon.textContent = "content_copy";
+        button.classList.remove('bg-emerald-700');
+      }, 2400);
+    });
+  }
+
+  function copyHeaderEmail(btn) {
+    const email = "alex@chen-data.ai";
+    navigator.clipboard.writeText(email).then(() => {
+      const label = btn.querySelector('.btn-copy-label');
+      if (label) {
+        const orig = label.textContent;
+        label.textContent = "Copied! ✓";
+        setTimeout(() => { label.textContent = orig; }, 2000);
+      }
+    });
+  }
+
+  // High-End Interactive Cursor with Lerp Physics
+  const cursor = document.getElementById('custom-cursor');
+  const cursorRing = document.getElementById('cursor-ring');
+  const cursorBadge = document.getElementById('cursor-badge');
+
+  if (cursor && window.matchMedia("(pointer: fine)").matches && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let ringX = mouseX;
+    let ringY = mouseY;
+
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      cursor.style.transform = `translate3d(${mouseX}px, ${mouseY}px, 0)`;
+    });
+
+    // Magnetic interaction triggers
+    const interactiveTargets = document.querySelectorAll('a, button, [data-cursor], .pin-item');
+    interactiveTargets.forEach(el => {
+      el.addEventListener('mouseenter', () => {
+        cursor.classList.add('cursor-hover-active');
+        const tag = el.getAttribute('data-cursor') || 'VIEW';
+        if (cursorBadge) cursorBadge.textContent = tag;
+      });
+      el.addEventListener('mouseleave', () => {
+        cursor.classList.remove('cursor-hover-active');
+      });
+    });
+
+    // Tactile Click Ripple Spark
+    window.addEventListener('click', (e) => {
+      const spark = document.createElement('div');
+      spark.className = 'cursor-click-spark';
+      spark.style.left = `${e.clientX}px`;
+      spark.style.top = `${e.clientY}px`;
+      document.body.appendChild(spark);
+      setTimeout(() => spark.remove(), 550);
+    });
+  }
+</script></body></html>

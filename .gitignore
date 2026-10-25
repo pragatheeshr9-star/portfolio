@@ -1,0 +1,75 @@
+﻿# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+/.pytest_cache/
+/.mypy_cache/
+/.ruff_cache/
+/.venv/
+**/__pycache__/
+**/.pytest_cache/
+**/.mypy_cache/
+**/.ruff_cache/
+**/.venv/
+
+# python tooling / local state
+*.sqlite
+*.db
+*.log
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+/dist
+
+# misc
+.DS_Store
+*.pem
+*.zip
+*.tar.gz
+*.tgz
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files
+.env
+.env.*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# local caches
+.uv-cache/
+**/.uv-cache/
+**/.cache/
+
+# generated analysis artifacts
+*.parquet
+*.csv
+
+# editor / OS
+.vscode/
+.idea/
+Thumbs.db

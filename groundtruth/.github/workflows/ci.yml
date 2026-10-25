@@ -1,0 +1,14 @@
+name: GroundTruth CI
+on: [pull_request, push]
+jobs:
+  test-and-evaluate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+      - run: uv sync --all-groups
+        working-directory: groundtruth
+      - run: uv run pytest -q
+        working-directory: groundtruth
+      - run: uv run python -m scripts.create_fixture_eval && uv run python -m scripts.ingest_fixture && uv run python -m scripts.run_eval
+        working-directory: groundtruth

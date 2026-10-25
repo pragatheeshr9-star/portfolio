@@ -1,0 +1,91 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" width="100%" height="100%">
+  <defs>
+    <linearGradient id="dcBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#05070a"/>
+      <stop offset="50%" stop-color="#0a1017"/>
+      <stop offset="100%" stop-color="#0e1722"/>
+    </linearGradient>
+    <linearGradient id="rackGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.8"/>
+      <stop offset="50%" stop-color="#2563eb" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#00d4ff" stop-opacity="0.8"/>
+    </linearGradient>
+    <filter id="serverGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="600" fill="url(#dcBg)"/>
+
+  <!-- Datacenter Aisle Perspective Floor -->
+  <polygon points="0,600 240,320 560,320 800,600" fill="#0c1219"/>
+  <line x1="400" y1="320" x2="400" y2="600" stroke="#00d4ff" stroke-opacity="0.15" stroke-width="2"/>
+  <line x1="320" y1="320" x2="200" y2="600" stroke="#00d4ff" stroke-opacity="0.08" stroke-width="1.5"/>
+  <line x1="480" y1="320" x2="600" y2="600" stroke="#00d4ff" stroke-opacity="0.08" stroke-width="1.5"/>
+
+  <!-- Left Server Rack Row -->
+  <g>
+    <!-- Rack Outline -->
+    <polygon points="40,580 40,40 240,140 240,480" fill="#11161d" stroke="#1f2937" stroke-width="2"/>
+    <!-- Server Units (Racks) -->
+    <!-- Blade 1 -->
+    <polygon points="50,110 50,70 230,160 230,195" fill="#18202a" stroke="#2563eb" stroke-width="1"/>
+    <!-- Blade 2 -->
+    <polygon points="50,160 50,120 230,205 230,240" fill="#18202a" stroke="#00d4ff" stroke-width="1"/>
+    <!-- Blade 3 -->
+    <polygon points="50,210 50,170 230,250 230,285" fill="#18202a" stroke="#2563eb" stroke-width="1"/>
+    <!-- Blade 4 -->
+    <polygon points="50,260 50,220 230,295 230,330" fill="#18202a" stroke="#00d4ff" stroke-width="1"/>
+    <!-- Blade 5 -->
+    <polygon points="50,310 50,270 230,340 230,375" fill="#18202a" stroke="#2563eb" stroke-width="1"/>
+    <!-- Blade 6 -->
+    <polygon points="50,360 50,320 230,385 230,420" fill="#18202a" stroke="#00d4ff" stroke-width="1"/>
+    <!-- Left Indicator LEDs -->
+    <circle cx="90" cy="115" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+    <circle cx="105" cy="120" r="3" fill="#22c55e" filter="url(#serverGlow)"/>
+    <circle cx="120" cy="125" r="3" fill="#ffb703" filter="url(#serverGlow)"/>
+    <circle cx="90" cy="165" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+    <circle cx="105" cy="170" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+    <circle cx="90" cy="215" r="3" fill="#22c55e" filter="url(#serverGlow)"/>
+    <circle cx="105" cy="220" r="3" fill="#22c55e" filter="url(#serverGlow)"/>
+    <circle cx="90" cy="265" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+    <circle cx="105" cy="270" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+  </g>
+
+  <!-- Right Server Rack Row -->
+  <g>
+    <!-- Rack Outline -->
+    <polygon points="760,580 760,40 560,140 560,480" fill="#11161d" stroke="#1f2937" stroke-width="2"/>
+    <!-- Server Units -->
+    <polygon points="750,110 750,70 570,160 570,195" fill="#18202a" stroke="#00d4ff" stroke-width="1"/>
+    <polygon points="750,160 750,120 570,205 570,240" fill="#18202a" stroke="#2563eb" stroke-width="1"/>
+    <polygon points="750,210 750,170 570,250 570,285" fill="#18202a" stroke="#00d4ff" stroke-width="1"/>
+    <polygon points="750,260 750,220 570,295 570,330" fill="#18202a" stroke="#2563eb" stroke-width="1"/>
+    <polygon points="750,310 750,270 570,340 570,375" fill="#18202a" stroke="#00d4ff" stroke-width="1"/>
+    <polygon points="750,360 750,320 570,385 570,420" fill="#18202a" stroke="#2563eb" stroke-width="1"/>
+    <!-- Right Indicator LEDs -->
+    <circle cx="710" cy="115" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+    <circle cx="695" cy="120" r="3" fill="#22c55e" filter="url(#serverGlow)"/>
+    <circle cx="710" cy="165" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+    <circle cx="695" cy="170" r="3" fill="#ffb703" filter="url(#serverGlow)"/>
+    <circle cx="710" cy="215" r="3" fill="#22c55e" filter="url(#serverGlow)"/>
+    <circle cx="695" cy="220" r="3" fill="#22c55e" filter="url(#serverGlow)"/>
+    <circle cx="710" cy="265" r="3" fill="#00d4ff" filter="url(#serverGlow)"/>
+  </g>
+
+  <!-- Center Overhead Cable Trays & Blue Ambient Glow -->
+  <rect x="250" y="30" width="300" height="40" fill="#141c24" stroke="#1f2937" stroke-width="1.5"/>
+  <line x1="250" y1="50" x2="550" y2="50" stroke="#00d4ff" stroke-width="3" filter="url(#serverGlow)" opacity="0.9"/>
+  <line x1="250" y1="58" x2="550" y2="58" stroke="#ffb703" stroke-width="1.5" opacity="0.7"/>
+
+  <!-- End of Aisle Optical Fiber Light Beam -->
+  <polygon points="350,320 450,320 480,180 320,180" fill="#0a1726" stroke="#00d4ff" stroke-width="1.5"/>
+  <circle cx="400" cy="250" r="18" fill="#00d4ff" filter="url(#serverGlow)" opacity="0.75"/>
+  <circle cx="400" cy="250" r="7" fill="#ffffff"/>
+
+  <!-- Overlay Telemetry Text -->
+  <text x="400" y="520" font-family="monospace" font-size="12" fill="#00d4ff" font-weight="bold" text-anchor="middle" letter-spacing="3">AZURE DATA &amp; AI CLUSTER // RACK B-04</text>
+  <text x="400" y="545" font-family="monospace" font-size="10" fill="#a0aec0" text-anchor="middle" letter-spacing="2">TEMPS: 21.4°C OPTIMAL · INGRESS: 5M EPS NOMINAL</text>
+</svg>
+

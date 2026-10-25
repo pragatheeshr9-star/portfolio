@@ -1,0 +1,10 @@
+pyproject.toml
+app/__init__.py
+app/core.py
+app/main.py
+groundtruth.egg-info/PKG-INFO
+groundtruth.egg-info/SOURCES.txt
+groundtruth.egg-info/dependency_links.txt
+groundtruth.egg-info/requires.txt
+groundtruth.egg-info/top_level.txt
+tests/test_core.py

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="100%" height="100%">
+  <defs>
+    <linearGradient id="bgRAG" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0e0a1a"/>
+      <stop offset="50%" stop-color="#141026"/>
+      <stop offset="100%" stop-color="#1d163a"/>
+    </linearGradient>
+    <linearGradient id="violetLine" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7"/>
+      <stop offset="50%" stop-color="#655592"/>
+      <stop offset="100%" stop-color="#00d4ff"/>
+    </linearGradient>
+    <filter id="violetGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <rect width="800" height="500" fill="url(#bgRAG)"/>
+
+  <!-- Technical Grid -->
+  <g stroke="#a855f7" stroke-opacity="0.08" stroke-width="1">
+    <line x1="160" y1="0" x2="160" y2="500"/>
+    <line x1="320" y1="0" x2="320" y2="500"/>
+    <line x1="480" y1="0" x2="480" y2="500"/>
+    <line x1="640" y1="0" x2="640" y2="500"/>
+    <line x1="0" y1="125" x2="800" y2="125"/>
+    <line x1="0" y1="250" x2="800" y2="250"/>
+    <line x1="0" y1="375" x2="800" y2="375"/>
+  </g>
+
+  <!-- Flow connecting query -> retrieval -> guardrails -> LLM -->
+  <path d="M 150 250 L 250 250" stroke="url(#violetLine)" stroke-width="3" filter="url(#violetGlow)"/>
+  <path d="M 370 250 L 460 250" stroke="url(#violetLine)" stroke-width="3" filter="url(#violetGlow)"/>
+  <path d="M 580 250 L 660 250" stroke="url(#violetLine)" stroke-width="3" filter="url(#violetGlow)"/>
+
+  <!-- Return Flow / Feedback loop -->
+  <path d="M 690 310 C 690 410, 310 410, 310 310" stroke="#00d4ff" stroke-width="2" stroke-dasharray="6 6" fill="none" opacity="0.6"/>
+  <text x="500" y="425" font-family="monospace" font-size="9" fill="#00d4ff" text-anchor="middle">GROUNDEDNESS EVALUATION &amp; CONFIDENCE RECHECK</text>
+
+  <!-- Node 1: User Query / Intent Router -->
+  <g transform="translate(50, 190)">
+    <rect width="110" height="120" rx="10" fill="#1b152e" stroke="#a855f7" stroke-width="1.8"/>
+    <rect x="8" y="8" width="94" height="22" rx="4" fill="#a855f7" fill-opacity="0.2"/>
+    <text x="55" y="23" font-family="monospace" font-size="9" fill="#d8b4fe" font-weight="bold" text-anchor="middle">QUERY INTENT</text>
+    <text x="55" y="55" font-family="sans-serif" font-size="12" fill="#ffffff" text-anchor="middle">User Prompt</text>
+    <text x="55" y="75" font-family="monospace" font-size="10" fill="#a855f7" text-anchor="middle">Intent Router</text>
+    <text x="55" y="95" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">Query Expansion</text>
+  </g>
+
+  <!-- Node 2: Hybrid Search (Vector + BM25) -->
+  <g transform="translate(250, 180)">
+    <rect width="130" height="140" rx="10" fill="#1b152e" stroke="#a855f7" stroke-width="2" filter="url(#violetGlow)"/>
+    <rect x="8" y="8" width="114" height="24" rx="4" fill="#a855f7" fill-opacity="0.25"/>
+    <text x="65" y="24" font-family="monospace" font-size="10" fill="#d8b4fe" font-weight="bold" text-anchor="middle">HYBRID RETRIEVAL</text>
+    <text x="65" y="58" font-family="sans-serif" font-size="12" fill="#ffffff" font-weight="bold" text-anchor="middle">Azure AI Search</text>
+    <text x="65" y="80" font-family="monospace" font-size="10" fill="#22c55e" text-anchor="middle">Vector + BM25</text>
+    <text x="65" y="100" font-family="monospace" font-size="9" fill="#00d4ff" text-anchor="middle">Semantic Reranker</text>
+    <text x="65" y="118" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">k=15 Chunks</text>
+  </g>
+
+  <!-- Node 3: Guardrails & Context Assembly -->
+  <g transform="translate(460, 190)">
+    <rect width="130" height="120" rx="10" fill="#1b152e" stroke="#00d4ff" stroke-width="1.8"/>
+    <rect x="8" y="8" width="114" height="22" rx="4" fill="#00d4ff" fill-opacity="0.2"/>
+    <text x="65" y="23" font-family="monospace" font-size="9" fill="#00d4ff" font-weight="bold" text-anchor="middle">GUARDRAILS</text>
+    <text x="65" y="55" font-family="sans-serif" font-size="12" fill="#ffffff" text-anchor="middle">Context Gate</text>
+    <text x="65" y="75" font-family="monospace" font-size="10" fill="#22c55e" text-anchor="middle">Hallucination Block</text>
+    <text x="65" y="95" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">PII Sanitization</text>
+  </g>
+
+  <!-- Node 4: Azure OpenAI & Streaming Output -->
+  <g transform="translate(660, 190)">
+    <rect width="110" height="120" rx="10" fill="#1b152e" stroke="#22c55e" stroke-width="1.8"/>
+    <rect x="8" y="8" width="94" height="22" rx="4" fill="#22c55e" fill-opacity="0.2"/>
+    <text x="55" y="23" font-family="monospace" font-size="9" fill="#22c55e" font-weight="bold" text-anchor="middle">INFERENCE</text>
+    <text x="55" y="55" font-family="sans-serif" font-size="12" fill="#ffffff" text-anchor="middle">Azure OpenAI</text>
+    <text x="55" y="75" font-family="monospace" font-size="10" fill="#d8b4fe" text-anchor="middle">GPT-4o Reasoning</text>
+    <text x="55" y="95" font-family="monospace" font-size="9" fill="#888888" text-anchor="middle">Cited Response</text>
+  </g>
+
+  <!-- Header Annotations -->
+  <text x="40" y="45" font-family="monospace" font-size="11" fill="#d8b4fe" font-weight="bold" letter-spacing="2">BLUEPRINT // 02 · SYSTEM TOPOLOGY</text>
+  <text x="40" y="65" font-family="sans-serif" font-size="15" fill="#ffffff" font-weight="bold">Production Enterprise RAG System</text>
+  <text x="760" y="45" font-family="monospace" font-size="10" fill="#22c55e" text-anchor="end">AZURE OPENAI · HYBRID SEARCH · GUARDRAILS</text>
+</svg>
+

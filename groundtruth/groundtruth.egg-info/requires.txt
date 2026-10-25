@@ -1,0 +1,6 @@
+beautifulsoup4<5,>=4.12
+fastapi<1,>=0.115
+httpx<1,>=0.28
+numpy<3,>=2.1
+pydantic<3,>=2.10
+uvicorn[standard]<1,>=0.32

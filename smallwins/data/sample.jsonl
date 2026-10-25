@@ -1,0 +1,3 @@
+{"id":"retention-window","category":"single_fact","prompt":"Passage: The retention period is 30 days. Question: What is the retention period?","expected":"The retention period is 30 days."}
+{"id":"review-window","category":"single_fact","prompt":"Passage: The review window is fourteen days. Question: What is the review window?","expected":"The review window is fourteen days."}
+{"id":"support-hours","category":"single_fact","prompt":"Passage: Support is available Monday through Friday. Question: When is support available?","expected":"Support is available Monday through Friday."}

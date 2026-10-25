@@ -1,0 +1,11 @@
+README.md
+pyproject.toml
+app/benchmark.py
+app/cli.py
+app/main.py
+smallwins.egg-info/PKG-INFO
+smallwins.egg-info/SOURCES.txt
+smallwins.egg-info/dependency_links.txt
+smallwins.egg-info/requires.txt
+smallwins.egg-info/top_level.txt
+tests/test_benchmark.py
